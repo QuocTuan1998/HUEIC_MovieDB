@@ -29,7 +29,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case TAB_HOME:
-                HomeActivity frmHome = new HomeActivity();
+                HomeFragment frmHome = new HomeFragment();
                 return frmHome;
             case TAB_SEARCH:
                 SearchActivity frmSearch = new SearchActivity();
