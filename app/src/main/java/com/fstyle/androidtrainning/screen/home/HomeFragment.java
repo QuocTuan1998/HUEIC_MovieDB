@@ -1,5 +1,6 @@
 package com.fstyle.androidtrainning.screen.home;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,21 +13,22 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.fstyle.androidtrainning.R;
 import com.fstyle.androidtrainning.adapter.MovieAdapter;
 import com.fstyle.androidtrainning.listener.CallAPIListener;
+import com.fstyle.androidtrainning.listener.OnRecyclerViewItemListener;
 import com.fstyle.androidtrainning.model.Movie;
 import com.fstyle.androidtrainning.restapi.GetMoviesAsynTask;
+import com.fstyle.androidtrainning.screen.detailmovie.DetailsMovieActivity;
+import com.fstyle.androidtrainning.util.Constant;
 import java.util.List;
 
 /**
  * Created by ossierra on 12/27/17.
  */
 
-public class HomeFragment extends Fragment implements CallAPIListener {
+public class HomeFragment extends Fragment implements CallAPIListener, OnRecyclerViewItemListener {
 
-    Unbinder unbinder;
     private static final String TAG = HomeFragment.class.getName();
 
     @BindView(R.id.progress_bar)
@@ -39,7 +41,7 @@ public class HomeFragment extends Fragment implements CallAPIListener {
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         View viewContext = inflater.inflate(R.layout.fragment_home, container, false);
-        unbinder = ButterKnife.bind(this, viewContext);
+        ButterKnife.bind(this, viewContext);
         initLayoutReferences();
         new GetMoviesAsynTask(HomeFragment.this).execute();
         return viewContext;
@@ -63,6 +65,13 @@ public class HomeFragment extends Fragment implements CallAPIListener {
         Log.e(TAG, e.getMessage());
     }
 
+    @Override
+    public void onItemClick(Movie movie) {
+        Intent intent = new Intent(getActivity(), DetailsMovieActivity.class);
+        intent.putExtra(Constant.EXTRA_MOVIE_ID, movie);
+        startActivity(intent);
+    }
+
     private void initLayoutReferences() {
         recyclerView.setHasFixedSize(true);
 
@@ -77,6 +86,8 @@ public class HomeFragment extends Fragment implements CallAPIListener {
     }
 
     private void showMovieOnGrid(List<Movie> mMovieList) {
-        recyclerView.setAdapter(new MovieAdapter(mMovieList, R.layout.item_movie));
+        MovieAdapter adapter = new MovieAdapter(mMovieList, R.layout.item_movie);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnRecyclerViewItemListener(this);
     }
 }

@@ -12,4 +12,5 @@ public interface CallAPIListener<T> {
     void onCallAPISuccess(List<T> data);
 
     void onCallAPIError(Exception e);
+
 }
