@@ -53,6 +53,12 @@ public class Movie implements Parcelable {
     @SerializedName("vote_count")
     int voteCount;
 
+    @SerializedName("runtime")
+    private Integer runtime;
+
+    @SerializedName("genres")
+    private List<MovieGenre> genres = new ArrayList<>();
+
     static final String BASE_IMG_URL = "http://image.tmdb.org/t/p/";
 
     // Poster image sizes
@@ -162,6 +168,18 @@ public class Movie implements Parcelable {
         return voteCount;
     }
 
+    public Integer getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(Integer runtime) {
+        this.runtime = runtime;
+    }
+
+    public List<MovieGenre> getGenres() {
+        return genres;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -183,6 +201,12 @@ public class Movie implements Parcelable {
         dest.writeByte(video ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.voteAverage);
         dest.writeInt(this.voteCount);
+        if (runtime == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(runtime);
+        }
     }
 
     protected Movie(Parcel in) {
@@ -200,6 +224,7 @@ public class Movie implements Parcelable {
         this.video = in.readByte() != 0;
         this.voteAverage = in.readFloat();
         this.voteCount = in.readInt();
+        this.runtime = in.readInt();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

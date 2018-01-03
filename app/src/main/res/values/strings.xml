@@ -6,4 +6,5 @@
     <string name="title_tab_profile">Profile</string>
     <string name="empty_data">Empty Data</string>
     <string name="empty_avatar_movie">No Avatar</string>
+    <string name="overview">Overview</string>
 </resources>
