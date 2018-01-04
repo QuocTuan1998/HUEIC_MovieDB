@@ -1,15 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView"
+    android:orientation="vertical"
+    tools:context="com.fstyle.androidtrainning.screen.search.SearchActivity"
+    >
+    <ProgressBar
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/empty_data"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-</RelativeLayout>
+        android:indeterminate="true"
+        android:visibility="gone" />
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:paddingStart="10dp"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+        <ImageView
+            android:id="@+id/imageSearchMovie"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_search"
+            android:contentDescription="@string/empty_avatar_movie"
+            android:paddingTop="@dimen/dp_10"
+            android:layout_alignParentRight="true"/>
+        <EditText
+            android:id="@+id/textSearchMovie"
+            android:layout_toStartOf="@id/imageSearchMovie"
+            android:layout_toLeftOf="@id/imageSearchMovie"
+            android:layout_alignBottom="@id/imageSearchMovie"
+            android:textSize="@dimen/sp_17"
+            android:inputType="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_10"/>
+    </RelativeLayout>
+    <include layout = "@layout/fragment_item_list_movie"/>
+</LinearLayout>
