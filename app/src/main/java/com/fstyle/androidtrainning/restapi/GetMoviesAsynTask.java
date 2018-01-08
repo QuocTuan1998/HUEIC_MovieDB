@@ -35,7 +35,12 @@ public class GetMoviesAsynTask extends AsyncTask<String, Void, List<Movie>> {
     @Override
     protected List<Movie> doInBackground(String... strings) {
         try {
-            String json = getJSONStringFromURL(Constant.API_URL_POPULAR_MOVIE);
+            String json;
+            if (strings.length == 0) {
+                json = getJSONStringFromURL(Constant.API_URL_POPULAR_MOVIE);
+            } else {
+                json = getJSONStringFromURL(strings[0]);
+            }
             MovieListResponse mMovieList = new Gson().fromJson(json, MovieListResponse.class);
             return mMovieList.getMovies();
         } catch (IOException e) {

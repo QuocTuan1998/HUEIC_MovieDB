@@ -7,4 +7,6 @@
     <string name="empty_data">Empty Data</string>
     <string name="empty_avatar_movie">No Avatar</string>
     <string name="overview">Overview</string>
+    <string name="search">Search</string>
+    <string name="no_results_found">No results found!</string>
 </resources>

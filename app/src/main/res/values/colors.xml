@@ -26,4 +26,5 @@
     <color name="color_white_low">#e8e8e9</color>
     <color name="color_green_a700">#00C853</color>
     <color name="color_grey_500">#9E9E9E</color>
+    <color name="colorView">#14181E</color>
 </resources>
