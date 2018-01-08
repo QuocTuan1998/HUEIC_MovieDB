@@ -18,4 +18,7 @@ public final class Constant {
     public static final String MINUTE = " min";
     public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
     public static final String DATE_FORMAT_DD_MM_YYYY = "yyyy-MM-dd";
+    public static final String LANGUAGE = "en-US";
+    public static final int DEFAULT_PAGE = 1;
+    public static final String TITLE_TOOLBAR = "Search";
 }
