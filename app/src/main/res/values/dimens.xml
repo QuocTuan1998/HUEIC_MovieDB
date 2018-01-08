@@ -31,6 +31,7 @@
     <dimen name="sp_13">13sp</dimen>
     <dimen name="dp_250">250dp</dimen>
     <dimen name="dp_300">300dp</dimen>
+    <dimen name="dp_202">202dp</dimen>
     <dimen name="sp_25">25sp</dimen>
     <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_140">140dp</dimen>

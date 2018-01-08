@@ -1,6 +1,13 @@
 package com.fstyle.androidtrainning.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.List;
+import org.json.JSONException;
 
 /**
  * Created by MyPC on 02/01/2018.
@@ -66,6 +73,39 @@ public final class StringUtils {
         String result = builder.toString();
         result = result.substring(BEGIN_INDEX, result.length() - SEPARATOR.length());
         return result;
+    }
+
+    public static String getJSONStringFromURL(String urlString) throws IOException, JSONException {
+
+        HttpURLConnection urlConnection = null;
+
+        URL url = new URL(urlString);
+
+        urlConnection = (HttpURLConnection) url.openConnection();
+
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+
+        urlConnection.setDoOutput(true);
+
+        urlConnection.connect();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),
+                Charset.defaultCharset()));
+
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            line = line + "\n";
+            sb.append(line);
+        }
+        br.close();
+
+        String jsonString = sb.toString();
+
+        urlConnection.disconnect();
+        return jsonString;
     }
 }
 

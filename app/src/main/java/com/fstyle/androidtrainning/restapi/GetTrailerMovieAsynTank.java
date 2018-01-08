@@ -2,9 +2,9 @@ package com.fstyle.androidtrainning.restapi;
 
 import android.os.AsyncTask;
 import com.fstyle.androidtrainning.listener.CallAPIListener;
-import com.fstyle.androidtrainning.model.MovieListResponse;
+import com.fstyle.androidtrainning.model.Trailer;
+import com.fstyle.androidtrainning.model.TrailerListResponse;
 import com.fstyle.androidtrainning.util.Constant;
-import com.fstyle.androidtrainning.model.Movie;
 import com.fstyle.androidtrainning.util.StringUtils;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -12,19 +12,19 @@ import java.util.List;
 import org.json.JSONException;
 
 /**
- * Created by ossierra on 12/25/17.
+ * Created by MyPC on 08/01/2018.
  */
 
-public class GetMoviesAsynTask extends AsyncTask<String, Void, List<Movie>> {
+public class GetTrailerMovieAsynTank extends AsyncTask<String, Void, List<Trailer>> {
 
-    private CallAPIListener mCallAPIListener;
+    private final CallAPIListener mCallAPIListener;
 
-    public GetMoviesAsynTask(CallAPIListener mCallAPIListener) {
+    public GetTrailerMovieAsynTank(CallAPIListener mCallAPIListener) {
         this.mCallAPIListener = mCallAPIListener;
     }
 
     @Override
-    protected List<Movie> doInBackground(String... strings) {
+    protected List<Trailer> doInBackground(String... strings) {
         try {
             String json;
             if (strings.length == 0) {
@@ -32,8 +32,8 @@ public class GetMoviesAsynTask extends AsyncTask<String, Void, List<Movie>> {
             } else {
                 json = StringUtils.getJSONStringFromURL(strings[0]);
             }
-            MovieListResponse mMovieList = new Gson().fromJson(json, MovieListResponse.class);
-            return mMovieList.getMovies();
+            TrailerListResponse mTrailerList = new Gson().fromJson(json, TrailerListResponse.class);
+            return mTrailerList.getTrailers();
         } catch (IOException e) {
             mCallAPIListener.onCallAPIError(e);
         } catch (JSONException e) {
@@ -41,10 +41,10 @@ public class GetMoviesAsynTask extends AsyncTask<String, Void, List<Movie>> {
         }
         return null;
     }
-
     @Override
-    protected void onPostExecute(List<Movie> movies) {
-        super.onPostExecute(movies);
-        mCallAPIListener.onCallAPISuccess(movies);
+    protected void onPostExecute(List<Trailer> trailers) {
+        super.onPostExecute(trailers);
+        mCallAPIListener.onCallAPISuccess(trailers);
     }
 }
+

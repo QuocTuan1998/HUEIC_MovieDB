@@ -2,26 +2,45 @@ package com.fstyle.androidtrainning.screen.detailmovie;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.fstyle.androidtrainning.R;
+import com.fstyle.androidtrainning.listener.CallAPIListener;
 import com.fstyle.androidtrainning.model.Movie;
+import com.fstyle.androidtrainning.model.Trailer;
+import com.fstyle.androidtrainning.restapi.GetTrailerMovieAsynTank;
 import com.fstyle.androidtrainning.util.Constant;
 import com.fstyle.androidtrainning.util.DateTimeUtils;
 import com.fstyle.androidtrainning.util.StringUtils;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ossierra on 1/2/18.
  */
 
-public class DetailsMovieActivity extends AppCompatActivity {
+public class DetailsMovieActivity extends AppCompatActivity
+        implements CallAPIListener, YouTubePlayer.OnInitializedListener,
+        YouTubeThumbnailView.OnInitializedListener, View.OnClickListener{
     private ImageView mImageFavorite, mImageBigView, mImageSmallView;
     private TextView mTextTitleMovie, mTextPublishTime, mTextTimeMovie;
     private TextView mTextKindMovie, mTextRate, mTextOverview;
-
+    private YouTubeThumbnailView mThumbnailView;
+    private YouTubePlayerFragment mYouTubePlayer;
+    private String mYoutubeKey;
+    private YouTubePlayer.OnInitializedListener mOnPlayerInitListener;
+    private RelativeLayout mRelativeLayout;
+    private static final String TAG = "DetailsMovieActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +51,16 @@ public class DetailsMovieActivity extends AppCompatActivity {
         initViews();
         fillData(movie);
 
+        new GetTrailerMovieAsynTank(DetailsMovieActivity.this).execute(
+                "https://api.themoviedb.org/3/movie/" + movie.getId()
+                        + "/videos?api_key=" + Constant.API_KEY
+        );
+
         mImageFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!mImageFavorite.isSelected()) {
-                        mImageFavorite.setSelected(true);
+                    mImageFavorite.setSelected(true);
                 } else {
                     mImageFavorite.setSelected(false);
                 }
@@ -54,6 +78,15 @@ public class DetailsMovieActivity extends AppCompatActivity {
         mTextRate = findViewById(R.id.textRate);
         mTextOverview = findViewById(R.id.text_overview);
         mImageFavorite = findViewById(R.id.imageFavorite);
+
+        mRelativeLayout = findViewById(R.id.relative_play);
+        mRelativeLayout.setOnClickListener(this);
+        mThumbnailView = findViewById(R.id.youtube_thumnail);
+        mYouTubePlayer = YouTubePlayerFragment.newInstance();
+        mYouTubePlayer.initialize(Constant.GOOGLE_API_KEY, mOnPlayerInitListener);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.frame_fragment, mYouTubePlayer)
+                .commit();
     }
     private void fillData(Movie movie) {
         String urlBackdrop = StringUtils.convertPosterPathToUrlPoster(movie.getBackdropPath());
@@ -76,5 +109,96 @@ public class DetailsMovieActivity extends AppCompatActivity {
         mTextKindMovie.setText(genresCommaSeparated);
         mTextRate.setText(rateMovie);
         mTextOverview.setText(movie.getOverview());
+    }
+
+    @Override
+    public void onStartCallAPI() {
+
+    }
+
+    @Override
+    public void onCallAPISuccess(List mTrailer) {
+        if (mTrailer != null) {
+            mThumbnailView.setVisibility(View.VISIBLE);
+
+            showMovieOnGrid(mTrailer);
+        } else {
+            mRelativeLayout.setVisibility(View.INVISIBLE);
+            mRelativeLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCallAPIError(Exception e) {
+
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider,
+            YouTubePlayer youTubePlayer, boolean b) {
+        mThumbnailView.setVisibility(View.GONE);
+        youTubePlayer.loadVideo(mYoutubeKey);
+        youTubePlayer.setShowFullscreenButton(false);
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+            YouTubeInitializationResult youTubeInitializationResult) {
+        Log.e(TAG, "onInitializationFailure: ");
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
+            final YouTubeThumbnailLoader youTubeThumbnailLoader) {
+        youTubeThumbnailLoader.setVideo(mYoutubeKey);
+        youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader
+                .OnThumbnailLoadedListener() {
+            @Override
+            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                youTubeThumbnailLoader.release();
+            }
+
+            @Override
+            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
+                    YouTubeThumbnailLoader.ErrorReason errorReason) {
+                Log.e(TAG, "onThumbnailError: ");
+            }
+        });
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
+            YouTubeInitializationResult youTubeInitializationResult) {
+        Log.e(TAG, "onInitializationFailure: ");
+    }
+
+    private void showMovieOnGrid(List<Trailer> mListTrailer) {
+
+        if (mListTrailer.isEmpty()) {
+            Toast.makeText(this, "No Result Found", Toast.LENGTH_SHORT).show();
+        } else {
+            for (Trailer trailer : mListTrailer) {
+                if (trailer.getName().contains(Constant.OFFICIAL)) {
+                    mYoutubeKey = trailer.getKey();
+                    break;
+                } else {
+                    mYoutubeKey = mListTrailer.get(Constant.FIRST_TRAILER).getKey();
+                }
+            }
+            mThumbnailView.initialize(Constant.GOOGLE_API_KEY, this);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.relative_play:
+                mRelativeLayout.setVisibility(View.INVISIBLE);
+                mRelativeLayout.setVisibility(View.GONE);
+                mYouTubePlayer.initialize(Constant.GOOGLE_API_KEY, this);
+                break;
+            default:
+                break;
+        }
     }
 }

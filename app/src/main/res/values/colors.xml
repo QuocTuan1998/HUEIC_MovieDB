@@ -27,4 +27,5 @@
     <color name="color_green_a700">#00C853</color>
     <color name="color_grey_500">#9E9E9E</color>
     <color name="colorView">#14181E</color>
+    <color name="colorBackgroundVideo">#4B000000</color>
 </resources>
