@@ -21,4 +21,7 @@ public final class Constant {
     public static final String LANGUAGE = "en-US";
     public static final int DEFAULT_PAGE = 1;
     public static final String TITLE_TOOLBAR = "Search";
+    public static final String GOOGLE_API_KEY = "AIzaSyA99nefcNFvOztPiH4lp8YtcSjz072UsDU";
+    public static final String OFFICIAL = "Official";
+    public static final int FIRST_TRAILER = 0;
 }
