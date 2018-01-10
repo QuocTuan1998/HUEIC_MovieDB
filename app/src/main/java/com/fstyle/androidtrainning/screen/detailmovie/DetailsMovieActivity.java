@@ -13,6 +13,7 @@ import com.fstyle.androidtrainning.R;
 import com.fstyle.androidtrainning.listener.CallAPIListener;
 import com.fstyle.androidtrainning.model.Movie;
 import com.fstyle.androidtrainning.model.Trailer;
+import com.fstyle.androidtrainning.restapi.GetMovieAsynTask;
 import com.fstyle.androidtrainning.restapi.GetTrailerMovieAsynTank;
 import com.fstyle.androidtrainning.util.Constant;
 import com.fstyle.androidtrainning.util.DateTimeUtils;
@@ -46,13 +47,16 @@ public class DetailsMovieActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        Movie movie = getIntent().getParcelableExtra(Constant.EXTRA_MOVIE_ID);
+        Integer movieId = getIntent().getIntExtra(Constant.EXTRA_MOVIE_ID, 0);
 
         initViews();
-        fillData(movie);
 
+        new GetMovieAsynTask(DetailsMovieActivity.this).execute(
+                "https://api.themoviedb.org/3/movie/" + movieId + "?api_key="
+                        + Constant.API_KEY + "&language=" + Constant.LANGUAGE
+        );
         new GetTrailerMovieAsynTank(DetailsMovieActivity.this).execute(
-                "https://api.themoviedb.org/3/movie/" + movie.getId()
+                "https://api.themoviedb.org/3/movie/" + movieId
                         + "/videos?api_key=" + Constant.API_KEY
         );
 
@@ -89,26 +93,32 @@ public class DetailsMovieActivity extends AppCompatActivity
                 .commit();
     }
     private void fillData(Movie movie) {
-        String urlBackdrop = StringUtils.convertPosterPathToUrlPoster(movie.getBackdropPath());
-        String urlPoster = StringUtils.convertPosterPathToUrlPoster(movie.getPosterPath());
-        String genresCommaSeparated = StringUtils
-                .convertListToStringCommaSeparated(movie.getMovieGenres());
-        String rateMovie = movie.getVoteAverage() + Constant.MAX_POINT;
-        String runTimeMovie = movie.getRuntime() + Constant.MINUTE;
-        Date date =
-                DateTimeUtils.convertStringToDate(movie.getReleaseDate(),
-                        Constant.DATE_FORMAT_DD_MM_YYYY);
-        String releaseDate = DateTimeUtils.getStrDateTimeFormatted(date,
-                Constant.DATE_FORMAT_DD_MMM_YYYY);
+        if (movie != null) {
+            if (movie.getBackdropPath() != null) {
+                String urlBackdrop = StringUtils.convertPosterPathToUrlPoster(movie
+                        .getBackdropPath());
+                Glide.with(this).load(urlBackdrop).into(mImageBigView);
+            }
+            if (movie.getPosterPath() != null) {
+                String urlPoster = StringUtils.convertPosterPathToUrlPoster(movie.getPosterPath());
+                Glide.with(this).load(urlPoster).into(mImageSmallView);
+            }
+            String genresCommaSeparated = StringUtils
+                    .convertListToStringCommaSeparated(movie.getMovieGenres());
+            String rateMovie = movie.getVoteAverage() + Constant.MAX_POINT;
+            String runTimeMovie = movie.getRuntime() + Constant.MINUTE;
+            Date date = DateTimeUtils.convertStringToDate(movie.getReleaseDate(),
+                    Constant.DATE_FORMAT_DD_MM_YYYY);
+            String releaseDate = DateTimeUtils.getStrDateTimeFormatted(date,
+                    Constant.DATE_FORMAT_DD_MMM_YYYY);
 
-        Glide.with(this).load(urlBackdrop).into(mImageBigView);
-        Glide.with(this).load(urlPoster).into(mImageSmallView);
-        mTextTitleMovie.setText(movie.getTitle());
-        mTextPublishTime.setText(releaseDate);
-        mTextTimeMovie.setText(runTimeMovie);
-        mTextKindMovie.setText(genresCommaSeparated);
-        mTextRate.setText(rateMovie);
-        mTextOverview.setText(movie.getOverview());
+            mTextTitleMovie.setText(movie.getTitle());
+            mTextPublishTime.setText(releaseDate);
+            mTextTimeMovie.setText(runTimeMovie);
+            mTextKindMovie.setText(genresCommaSeparated);
+            mTextRate.setText(rateMovie);
+            mTextOverview.setText(movie.getOverview());
+        }
     }
 
     @Override
@@ -117,11 +127,21 @@ public class DetailsMovieActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCallAPISuccess(List mTrailer) {
-        if (mTrailer != null) {
+    public void onCallAPISuccess(List mList) {
+        if (mList != null) {
             mThumbnailView.setVisibility(View.VISIBLE);
+            if (mList instanceof List) {
+                if (((List<Movie>) mList).get(0) instanceof Movie) {
+                    List<Movie> movies = mList;
+                    for (Movie movie : movies) {
+                        fillData(movie);
+                    }
+                } else {
+                    List<Trailer> trailers = mList;
+                    showMovieOnGrid(trailers);
+                }
+            }
 
-            showMovieOnGrid(mTrailer);
         } else {
             mRelativeLayout.setVisibility(View.INVISIBLE);
             mRelativeLayout.setVisibility(View.GONE);

@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment implements CallAPIListener, OnRecycle
     @Override
     public void onItemClick(Movie movie) {
         Intent intent = new Intent(getActivity(), DetailsMovieActivity.class);
-        intent.putExtra(Constant.EXTRA_MOVIE_ID, movie);
+        intent.putExtra(Constant.EXTRA_MOVIE_ID, movie.getId());
         startActivity(intent);
     }
 
