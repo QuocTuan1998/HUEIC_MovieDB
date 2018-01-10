@@ -16,7 +16,6 @@ import org.json.JSONException;
  */
 
 public class GetMoviesAsynTask extends AsyncTask<String, Void, List<Movie>> {
-
     private CallAPIListener mCallAPIListener;
 
     public GetMoviesAsynTask(CallAPIListener mCallAPIListener) {
