@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "171136256647",
+    "firebase_url": "https://hueic-movie.firebaseio.com",
+    "project_id": "hueic-movie",
+    "storage_bucket": "hueic-movie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171136256647:android:2ac210def12734b2",
+        "android_client_info": {
+          "package_name": "com.framgia.moviedb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171136256647-ih1rctvmma30l93uhm4ni8lp6oeko6au.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.moviedb",
+            "certificate_hash": "59a03a7f74d392856ccb0d9208a30b4abc9c5625"
+          }
+        },
+        {
+          "client_id": "171136256647-acd5f90bjm7hcq59l3dois5n2j1ug43v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoYSITJ5s2LwmktB36KhZujPocQYqlLpQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171136256647-acd5f90bjm7hcq59l3dois5n2j1ug43v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

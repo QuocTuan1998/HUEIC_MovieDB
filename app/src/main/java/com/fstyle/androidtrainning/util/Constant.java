@@ -24,4 +24,9 @@ public final class Constant {
     public static final String GOOGLE_API_KEY = "AIzaSyA99nefcNFvOztPiH4lp8YtcSjz072UsDU";
     public static final String OFFICIAL = "Official";
     public static final int FIRST_TRAILER = 0;
+    public static final int RC_SIGN_IN = 9001;
+    public static final String APP_NODE_FIREBASE = "app_title";
+    public static final String APP_TITLE_FIREBASE = "HUEIC MOVIES";
+    public static final String USERS_NODE_FIREBASE = "users";
+    public static final String ANONYMOUS = "ANONYMOUS";
 }

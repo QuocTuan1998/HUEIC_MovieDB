@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".screen.home.MainActivity"
+            android:name="com.fstyle.androidtrainning.screen.home.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -22,10 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.detailmovie.DetailsMovieActivity"
+            android:name="com.fstyle.androidtrainning.screen.detailmovie.DetailsMovieActivity"
             android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name="com.fstyle.androidtrainning.screen.signin.SignInActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

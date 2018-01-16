@@ -132,6 +132,8 @@ public class SearchActivity extends Fragment
     @Override
     public boolean onQueryTextChange(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
+            mLinearLayout.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
             return false;
         }
 
