@@ -90,10 +90,12 @@ public class ProfileActivity extends Fragment
         btnSignout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFirebaseAuth.signOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUserName = Constant.ANONYMOUS;
-                startActivity(new Intent(view.getContext(), SignInActivity.class));
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    mFirebaseAuth.signOut();
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                    mUserName = Constant.ANONYMOUS;
+                    startActivity(new Intent(view.getContext(), SignInActivity.class));
+                }
             }
         });
         return view;
@@ -138,8 +140,8 @@ public class ProfileActivity extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        //        mGoogleApiClient.stopAutoManage(getActivity());
-        //        mGoogleApiClient.disconnect();
+                mGoogleApiClient.stopAutoManage(getActivity());
+                mGoogleApiClient.disconnect();
     }
 
     private void createUser() {
@@ -147,7 +149,7 @@ public class ProfileActivity extends Fragment
             mUserId = mUserCloudEndPoint.push().getKey();
         }
         MovieUser user = new MovieUser();
-        user.setName(mUserEmail);
+        user.setEmail(mUserEmail);
         user.setName(mUserName);
         ArrayList<HashMap<String, String>> favouriteFilm = new ArrayList<HashMap<String, String>>();
 

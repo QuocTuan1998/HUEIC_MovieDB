@@ -120,8 +120,9 @@ public class DetailsMovieActivity extends AppCompatActivity
                 Glide.with(this).load(urlBackdrop).into(mImageBigView);
             }
             if (movie.getPosterPath() != null) {
-                urlPoster = StringUtils.convertPosterPathToUrlPoster(movie.getPosterPath());
-                Glide.with(this).load(urlPoster).into(mImageSmallView);
+                urlPoster = movie.getPosterPath();
+                Glide.with(this).load(StringUtils.convertPosterPathToUrlPoster(movie
+                        .getPosterPath())).into(mImageSmallView);
             }
             String genresCommaSeparated = StringUtils
                     .convertListToStringCommaSeparated(movie.getMovieGenres());
@@ -316,13 +317,15 @@ public class DetailsMovieActivity extends AppCompatActivity
                         movie = getMovie(movieId.toString(), titleMovie, urlPoster);
 
                         Integer key = 0;
-                        for (HashMap<String, String> favouriteMovie : mUser.getFavouriteMovies()) {
-
-                            if (favouriteMovie.equals(movie)) {
-                                mImageFavorite.setSelected(true);
-                                break;
+                        if (mUser.getFavouriteMovies() != null) {
+                            for (HashMap<String, String> favouriteMovie : mUser
+                                    .getFavouriteMovies()) {
+                                if (favouriteMovie.equals(movie)) {
+                                    mImageFavorite.setSelected(true);
+                                    break;
+                                }
+                                key++;
                             }
-                            key++;
                         }
                     }
                 }
@@ -353,9 +356,9 @@ public class DetailsMovieActivity extends AppCompatActivity
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Boolean isExistUser = false;
                             if (checkUser(dataSnapshot)) {
-                                    int numOfMovie = mUser.getFavouriteMovies().size();
-                                    addMovie(movieId, titleMovie,
-                                            urlPoster, numOfMovie);
+                                int numOfMovie = mUser.getFavouriteMovies() != null ? mUser
+                                        .getFavouriteMovies().size() : 0;
+                                addMovie(movieId, titleMovie, urlPoster, numOfMovie);
                             } else {
                                 createUser(mUserName, mUserEmail, movieId, titleMovie, urlPoster);
                                 mUserCloudEndPoint.getDatabase();
